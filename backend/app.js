@@ -8,7 +8,7 @@ const app = express();
 
 app.use(cors());
 
-app.use('/api/v1/users',userRoute)
+app.use('/api/v1/user',userRoute)
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`), 404);
