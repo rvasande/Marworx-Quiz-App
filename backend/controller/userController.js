@@ -1,11 +1,12 @@
-import User from "../models/userModel.js";
-import asyncHandler from "../middleware/asyncHandler.js";
-import generateToken from "../utils/generateToken.js";
+const User = require('../model/userModel.js')
+const generateToken = require('../utils/generateToken.js')
+const asyncHandler = require('../middleware/asyncHandler.js')
+
 
 // @desc  Auth user & token
 // @route POST /api/v1/user/login
 // access public
-const authUser = asyncHandler(async (req, res) => {
+exports.authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email: email });
 
@@ -28,7 +29,7 @@ const authUser = asyncHandler(async (req, res) => {
 // @desc   register user
 // @route  POST /api/v1/user/register
 // access  public
-const registerUser = asyncHandler(async (req, res) => {
+exports.registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
   const userExits = await User.findOne({ email });
@@ -66,7 +67,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc   logout user / clear cookie
 // @route  POST /api/v1/user/logout
 // access  private
-const logoutUser = asyncHandler(async (req, res) => {
+exports.logoutUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
@@ -76,8 +77,4 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 
-export {
-  authUser,
-  registerUser,
-  logoutUser,
-};
+// module.exports = {authUser, registerUser, logoutUser}

@@ -1,8 +1,8 @@
-import jwt from "jsonwebtoken";
-import asyncHandler from "./asyncHandler.js";
-import User from "../models/userModel.js";
+const jwt = require('jsonwebtoken')
+const User = require('../model/userModel.js')
+const asyncHandler = require('../middleware/asyncHandler.js')
 
-const protect = asyncHandler(async (req, res, next) => {
+exports.protect = asyncHandler(async (req, res, next) => {
   let token;
 
   token = req.cookies.jwt;
@@ -21,7 +21,7 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-const admin = (req,res,next)=>{
+exports.admin = (req,res,next)=>{
     if(req.user && req.user.isAdmin){
         next()
     }else{
@@ -30,5 +30,3 @@ const admin = (req,res,next)=>{
     }
 } 
 
-
-export { protect , admin}
