@@ -1,12 +1,12 @@
-const User = require('../model/userModel.js')
-const generateToken = require('../utils/generateToken.js')
-const asyncHandler = require('../middleware/asyncHandler.js')
-
+const User = require("../model/userModel.js");
+const generateToken = require("../utils/generateToken.js");
+const asyncHandler = require("../middleware/asyncHandler.js");
+const AppError = require("../utils/appError.js");
 
 // @desc  Auth user & token
 // @route POST /api/v1/user/login
 // access public
-exports.authUser = asyncHandler(async (req, res) => {
+exports.authUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email: email });
 
@@ -29,19 +29,17 @@ exports.authUser = asyncHandler(async (req, res) => {
 // @desc   register user
 // @route  POST /api/v1/user/register
 // access  public
-exports.registerUser = asyncHandler(async (req, res) => {
+exports.registerUser = asyncHandler(async (req, res, next) => {
   const { name, email, password } = req.body;
 
   const userExits = await User.findOne({ email });
 
   if (userExits) {
-    res.status(400);
-    throw new Error("user already exits");
+    return next(new AppError("user already exits", 400));
   }
 
-  if(password.length < 8){
-    res.status(400)
-    throw new Error('password must be at least 8 characters')
+  if (password.length < 8) {
+    return next(new AppError("password must be at least 8 characters", 400));
   }
 
   const user = await User.create({
@@ -59,15 +57,14 @@ exports.registerUser = asyncHandler(async (req, res) => {
       isAdmin: user.isAdmin,
     });
   } else {
-    res.status(400);
-    throw new Error("Invalid user data");
+    return next(new AppError("Invalid user data", 400));
   }
 });
 
 // @desc   logout user / clear cookie
 // @route  POST /api/v1/user/logout
 // access  private
-exports.logoutUser = asyncHandler(async (req, res) => {
+exports.logoutUser = asyncHandler(async (req, res, next) => {
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
@@ -77,4 +74,3 @@ exports.logoutUser = asyncHandler(async (req, res) => {
 });
 
 
-// module.exports = {authUser, registerUser, logoutUser}
