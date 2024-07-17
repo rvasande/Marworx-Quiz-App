@@ -1,4 +1,7 @@
 const connectDB = require("./config/db");
+const dotenv = require('dotenv');
+
+dotenv.config({ path: './config.env' });
 
 process.on('uncaughtException', (err) => {
   console.log('Uncaught Exception shutting down.....');

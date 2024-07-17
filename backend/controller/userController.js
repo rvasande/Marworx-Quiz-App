@@ -20,8 +20,7 @@ exports.authUser = asyncHandler(async (req, res, next) => {
       isAdmin: user.isAdmin,
     });
   } else {
-    res.status(401);
-    throw new Error("Invalid Email or Password");
+    return next(new AppError("Invalid Email or Password", 400));
   }
   res.send("auth user");
 });
