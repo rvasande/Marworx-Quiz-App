@@ -39,6 +39,7 @@ const RegisterScreen = () => {
       if (data && data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem('isAdmin',data.isAdmin)
       }
       console.log("Registration successful:", data);
     } catch (error) {

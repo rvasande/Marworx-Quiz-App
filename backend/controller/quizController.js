@@ -35,21 +35,37 @@ exports.deleteQuiz = asyncHandler(async (req, res, next) => {
   const quiz = await Quiz.findById(req.params.id);
 
   if (quiz) {
-    await Quiz.deleteOne({_id:quiz._id})
+    await Quiz.deleteOne({ _id: quiz._id });
     res.json({ message: "Quiz removed" });
   } else {
     next(new AppError("Quiz not found", 404));
   }
 });
 
-exports.getQuizById = asyncHandler(async (req, res, next) => {
+exports.getAnswer = asyncHandler(async (req, res, next) => {
   const quiz = await Quiz.findById(req.params.id);
 
   if (!quiz) {
-    next(new AppError("Quiz not found", 404));
-  } else {
-    res.status(200).json(quiz);
+    return next(new AppError("Quiz not found", 404));
   }
+
+  const { answers } = req.body;
+  const questions = quiz.questions;
+
+  const result = questions.map((question) => {
+    const submittedAnswerId = answers[question._id];
+    const correctOption = question.options.find((option) => option.isCorrect);
+
+    return {
+      questionId: question._id,
+      isCorrect: correctOption._id.toString() === submittedAnswerId,
+    };
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: result,
+  });
 });
 
 exports.updateQuiz = asyncHandler(async (req, res, next) => {
@@ -61,7 +77,7 @@ exports.updateQuiz = asyncHandler(async (req, res, next) => {
       ...(title && { title }),
       ...(description && { description }),
       ...(questions && { questions }),
-      ...(createdBy && { createdBy })
+      ...(createdBy && { createdBy }),
     },
     { new: true, runValidators: true }
   );
@@ -72,4 +88,3 @@ exports.updateQuiz = asyncHandler(async (req, res, next) => {
 
   res.status(200).json(updatedQuiz);
 });
-

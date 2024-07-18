@@ -6,7 +6,9 @@ import RegisterScreen from "./screen/RegisterScreen";
 import HomeScreen from "./screen/HomeScreen";
 import QuizScreen from "./screen/QuizScreen";
 import PrivateRoute from "./component/PrivateRoute";
+import AdminPrivateRoute from "./component/AdminPrivateRoute";
 import QuizQuestionsScreen from "./screen/QuizQuestionsScreen";
+import AdminDashboard from "./screen/admin/AdminDashboard";
 
 function App() {
   return (
@@ -30,6 +32,14 @@ function App() {
             <PrivateRoute>
               <QuizQuestionsScreen />
             </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminPrivateRoute>
+              <AdminDashboard />
+            </AdminPrivateRoute>
           }
         />
       </Routes>

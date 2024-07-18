@@ -33,6 +33,7 @@ const LoginScreen = () => {
       if (data && data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem('isAdmin',data.isAdmin)
         navigate("/quiz");
       }
 

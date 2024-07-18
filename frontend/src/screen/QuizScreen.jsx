@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const QuizScreen = () => {
   const [quiz, setQuiz] = useState([]);
+  const navigate = useNavigate();
 
   const getQuiz = async (token) => {
     try {
@@ -31,6 +32,13 @@ const QuizScreen = () => {
     }
   }, []);
 
+  const handleStartQuiz = (quizItem) => {
+    const userConfirmed = window.confirm("Do you want to start this quiz?");
+    if (userConfirmed) {
+      navigate(`/quiz/${quizItem._id}`, { state: { quizData: quizItem } });
+    }
+  };
+
   return (
     <Container className="my-4">
       <Row>
@@ -40,13 +48,12 @@ const QuizScreen = () => {
               <Card.Body>
                 <Card.Title>{quizItem.title}</Card.Title>
                 <Card.Text>{quizItem.description}</Card.Text>
-                <Link
-                  to={`/quiz/${quizItem._id}`}
-                  state={{ quizData: quizItem }}
+                <Button
+                  onClick={() => handleStartQuiz(quizItem)}
                   className="btn btn-primary"
                 >
                   Start Quiz
-                </Link>
+                </Button>
               </Card.Body>
             </Card>
           </Col>
