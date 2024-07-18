@@ -4,7 +4,6 @@ const asyncHandler = require('../middleware/asyncHandler.js')
 
 exports.protect = asyncHandler(async (req, res, next) => {
   let token;
-
   token = req.cookies.jwt;
   if (token) {
     try {
