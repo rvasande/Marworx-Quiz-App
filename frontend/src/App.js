@@ -1,11 +1,12 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './component/Header';
-import Footer from './component/Footer';
-import LoginScreen from './screen/LoginScreen';
-import RegisterScreen from './screen/RegisterScreen';
-import HomeScreen from './screen/HomeScreen';
-import QuizScreen from './screen/QuizScreen';
-import PrivateRoute from './component/PrivateRoute';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./component/Header";
+import Footer from "./component/Footer";
+import LoginScreen from "./screen/LoginScreen";
+import RegisterScreen from "./screen/RegisterScreen";
+import HomeScreen from "./screen/HomeScreen";
+import QuizScreen from "./screen/QuizScreen";
+import PrivateRoute from "./component/PrivateRoute";
+import QuizQuestionsScreen from "./screen/QuizQuestionsScreen";
 
 function App() {
   return (
@@ -15,7 +16,22 @@ function App() {
         <Route path="/" element={<HomeScreen />} />
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
-        <Route path="/quiz" element={<QuizScreen />} />
+        <Route
+          path="/quiz"
+          element={
+            <PrivateRoute>
+              <QuizScreen />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/quiz/:quizId"
+          element={
+            <PrivateRoute>
+              <QuizQuestionsScreen />
+            </PrivateRoute>
+          }
+        />
       </Routes>
       <Footer />
     </Router>

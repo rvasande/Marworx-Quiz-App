@@ -25,9 +25,7 @@ const LoginScreen = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      if (response.ok) {
-        navigate("/quiz");
-      } else {
+      if (!response.ok) {
         throw new Error("Failed to log in");
       }
 
@@ -35,9 +33,10 @@ const LoginScreen = () => {
       if (data && data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("isLoggedIn", true);
+        navigate("/quiz");
       }
 
-      console.log("Login successful:", data);
+      // console.log("Login successful:", data);
     } catch (error) {
       setError(error.message);
     } finally {
