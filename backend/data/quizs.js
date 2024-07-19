@@ -43,16 +43,16 @@ const quizzes = [
           ],
           timer: 30
         },
-        {
-          questionText: "Which CSS property is used to change the text color?",
-          options: [
-            { optionText: "color", isCorrect: true },
-            { optionText: "font-color", isCorrect: false },
-            { optionText: "text-color", isCorrect: false },
-            { optionText: "background-color", isCorrect: false }
-          ],
-          timer: 30
-        }
+        // {
+        //   questionText: "Which CSS property is used to change the text color?",
+        //   options: [
+        //     { optionText: "color", isCorrect: true },
+        //     { optionText: "font-color", isCorrect: false },
+        //     { optionText: "text-color", isCorrect: false },
+        //     { optionText: "background-color", isCorrect: false }
+        //   ],
+        //   timer: 30
+        // }
       ],
       createdBy:  new ObjectId("6697fea5f998e3d0c0f055f0")
     },

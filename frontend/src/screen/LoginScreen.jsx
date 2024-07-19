@@ -33,8 +33,12 @@ const LoginScreen = () => {
       if (data && data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("isLoggedIn", true);
-        localStorage.setItem('isAdmin',data.isAdmin)
-        navigate("/quiz");
+        localStorage.setItem("isAdmin", data.isAdmin);
+        if (data.isAdmin) {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/quiz");
+        }
       }
 
       // console.log("Login successful:", data);

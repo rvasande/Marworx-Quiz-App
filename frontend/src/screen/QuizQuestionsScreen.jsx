@@ -1,15 +1,39 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Container, Card, Button, Row, Col } from "react-bootstrap";
 
 const QuizQuestionsScreen = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { quizData } = location.state || {};
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [score, setScore] = useState(0);
-//   const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
 
   const [selectedOptions, setSelectedOptions] = useState({});
+  const timerSec =
+    quizData?.questions.reduce((acc, el) => acc + el.timer, 0) || 0;
+
+  useEffect(() => {
+    if (timerSec > 0) {
+      setTimer(timerSec);
+      const countdown = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer <= 1) {
+            clearInterval(countdown);
+            handleSubmit();
+            return 0;
+          }
+          return prevTimer - 1;
+        });
+      }, 1000);
+
+      setIntervalId(countdown);
+
+      return () => clearInterval(countdown);
+    }
+  }, [timerSec]);
 
   if (!quizData) {
     return (
@@ -28,6 +52,7 @@ const QuizQuestionsScreen = () => {
 
   const handleSubmit = async () => {
     try {
+      clearInterval(intervalId);
       const response = await fetch(
         `http://localhost:5000/api/v1/quiz/${quizData._id}`,
         {
@@ -37,7 +62,6 @@ const QuizQuestionsScreen = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            //   quizId: quizData._id,
             answers: selectedOptions,
           }),
         }
@@ -45,8 +69,14 @@ const QuizQuestionsScreen = () => {
       const result = await response.json();
       const resultArr = result?.data;
       const temp = resultArr.filter((el) => el.isCorrect);
-      temp.length === 0 ? setScore(0) : setScore(temp.length * 5);
+      const newScore = temp.length * 5;
+      setScore(newScore);
       setSelectedOptions({});
+
+      setTimeout(() => {
+        window.alert(`Your score is: ${newScore}`);
+        navigate("/quiz");
+      }, 2000);
     } catch (error) {
       console.error("Error submitting quiz:", error);
     }
@@ -63,10 +93,14 @@ const QuizQuestionsScreen = () => {
       </Button>
 
       <Row className="align-items-center mb-3">
-        <Col xs={8}>
+        <Col xs={6}>
           <h4>{quizData.title}</h4>
         </Col>
- 
+
+        <Col xs={2} className="text-end">
+          <h4> Timer: {timer}</h4>
+        </Col>
+
         <Col xs={2} className="text-end">
           <h4> Score: {score}</h4>
         </Col>

@@ -40,6 +40,11 @@ const RegisterScreen = () => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem('isAdmin',data.isAdmin)
+        if (data.isAdmin) {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/quiz");
+        }
       }
       console.log("Registration successful:", data);
     } catch (error) {
