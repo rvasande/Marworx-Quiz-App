@@ -10,7 +10,9 @@ const QuizQuestionsScreen = () => {
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(0);
   const [intervalId, setIntervalId] = useState(null);
+  const [quizName, setQuizname] = useState(quizData.title);
 
+  // console.log('xxxxx',quizName);
   const [selectedOptions, setSelectedOptions] = useState({});
   const timerSec =
     quizData?.questions.reduce((acc, el) => acc + el.timer, 0) || 0;
@@ -71,6 +73,7 @@ const QuizQuestionsScreen = () => {
       const temp = resultArr.filter((el) => el.isCorrect);
       const newScore = temp.length * 5;
       setScore(newScore);
+      saveScore(token, newScore, quizName);
       setSelectedOptions({});
 
       setTimeout(() => {
@@ -83,6 +86,32 @@ const QuizQuestionsScreen = () => {
   };
 
   const isSubmitDisabled = Object.keys(selectedOptions).length === 0;
+
+  const saveScore = async (token, score, quizName) => {
+    const userId = localStorage.getItem("userId");
+
+    const config = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ score, quizName, userId }),
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/user/score",
+        config
+      );
+      const result = await response.json();
+      // console.log('resulttttttt', result);
+      return result;
+    } catch (error) {
+      console.error("Error saving score:", error);
+      throw error;
+    }
+  };
 
   return (
     <Container>

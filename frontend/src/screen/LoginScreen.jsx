@@ -30,10 +30,14 @@ const LoginScreen = () => {
       }
 
       const data = await response.json();
+
       if (data && data.token) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data?.token);
         localStorage.setItem("isLoggedIn", true);
-        localStorage.setItem("isAdmin", data.isAdmin);
+        localStorage.setItem('email',data?.email)
+        localStorage.setItem('name',data?.name)
+        localStorage.setItem('userId',data?._id)
+        localStorage.setItem("isAdmin", data?.isAdmin);
         if (data.isAdmin) {
           navigate("/admin/dashboard");
         } else {

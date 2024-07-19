@@ -1,7 +1,9 @@
+const mongoose = require("mongoose");
 const User = require("../model/userModel.js");
 const generateToken = require("../utils/generateToken.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const AppError = require("../utils/appError.js");
+const Score = require("../model/scoreModel.js");
 
 // @desc  Auth user & token
 // @route POST /api/v1/user/login
@@ -48,7 +50,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     password,
   });
   if (user) {
-    const token = generateToken( user._id);
+    const token = generateToken(user._id);
 
     res.status(200).json({
       token,
@@ -72,4 +74,37 @@ exports.logoutUser = asyncHandler(async (req, res, next) => {
   });
 
   res.status(200).json({ message: "Logged Out Successfully" });
+});
+
+// @desc      save user score
+// @route     POST /api/v1/user/score/
+// @access    Private
+exports.saveScore = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+  const { score, quizName, userId } = req.body;
+
+  const newScore = new Score({ userId, quizName, score });
+  await newScore.save();
+  res.status(201).json({
+    status: "success",
+    data: newScore,
+  });
+});
+
+// @desc      Get score details by user ID
+// @route     GET /api/v1/user/score/:id
+// @access    Private
+exports.getScore = asyncHandler(async (req, res, next) => {
+  const userId = new mongoose.Types.ObjectId(req.params.id);
+
+  const scoreDetail = await Score.find({ userId: userId }).select('-__v');
+
+  if (!scoreDetail) {
+    return next(new AppError("No score details found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: scoreDetail,
+  });
 });

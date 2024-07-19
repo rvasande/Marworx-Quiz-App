@@ -9,6 +9,7 @@ import PrivateRoute from "./component/PrivateRoute";
 import AdminPrivateRoute from "./component/AdminPrivateRoute";
 import QuizQuestionsScreen from "./screen/QuizQuestionsScreen";
 import AdminDashboard from "./screen/admin/AdminDashboard";
+import ProfileScreen from "./screen/ProfileScreen";
 
 function App() {
   return (
@@ -35,6 +36,14 @@ function App() {
           }
         />
         <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <ProfileScreen />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="/admin/dashboard"
           element={
             <AdminPrivateRoute>
@@ -43,7 +52,7 @@ function App() {
           }
         />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </Router>
   );
 }
