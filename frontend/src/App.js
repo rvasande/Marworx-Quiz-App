@@ -10,6 +10,7 @@ import AdminPrivateRoute from "./component/AdminPrivateRoute";
 import QuizQuestionsScreen from "./screen/QuizQuestionsScreen";
 import AdminDashboard from "./screen/admin/AdminDashboard";
 import ProfileScreen from "./screen/ProfileScreen";
+import AdminAddQuiz  from './screen/admin/AdminAddQuiz'
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
           element={
             <AdminPrivateRoute>
               <AdminDashboard />
+            </AdminPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/add-quiz"
+          element={
+            <AdminPrivateRoute>
+              <AdminAddQuiz />
             </AdminPrivateRoute>
           }
         />

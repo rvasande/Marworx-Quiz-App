@@ -19,11 +19,20 @@ exports.getAllQuiz = asyncHandler(async (req, res, next) => {
 exports.addQuiz = asyncHandler(async (req, res, next) => {
   const { title, description, questions } = req.body;
 
+  for (const question of questions) {
+    if (question.options.length !== 4) {
+      return res.status(400).json({ message: "Each question must have exactly 4 options." });
+    }
+    const correctOptions = question.options.filter(option => option.isCorrect);
+    if (correctOptions.length !== 1) {
+      return res.status(400).json({ message: "Each question must have exactly one correct option." });
+    }
+  }
+
   const quiz = new Quiz({
     title,
     description,
     questions,
-    // createdBy: new ObjectId("6697fea5f998e3d0c0f055f0"),
     createdBy: req.user._id,
   });
 

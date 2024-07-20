@@ -5,11 +5,14 @@ import { useNavigate } from "react-router-dom";
 
 const MyNavbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
   const checkLoginStatus = useCallback(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(token !== null);
+    const adminStatus = localStorage.getItem("isAdmin") === "true";
+    setIsAdmin(adminStatus);
   }, []);
 
   useEffect(() => {
@@ -26,7 +29,9 @@ const MyNavbar = () => {
     const userConfirmed = window.confirm("Are you sure you want to logout?");
     if (userConfirmed) {
       localStorage.removeItem("token");
+      localStorage.removeItem("isAdmin");
       setIsLoggedIn(false);
+      setIsAdmin(false);
       navigate("/login");
     }
   };
@@ -45,6 +50,7 @@ const MyNavbar = () => {
             )}
             {isLoggedIn && (
               <>
+                {isAdmin && <Nav.Link href="/admin/dashboard">Dashboard</Nav.Link>}
                 <Nav.Link href="/quiz">Quiz</Nav.Link>
                 <Nav.Link href="/profile">My Profile</Nav.Link>
                 <Nav.Link onClick={logoutHandle}>Logout</Nav.Link>

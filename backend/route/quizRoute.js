@@ -10,6 +10,6 @@ router
   .delete(protect, admin, quizController.deleteQuiz)
   .post(protect, quizController.getAnswer)
   .patch(protect, admin, quizController.updateQuiz);
-router.route("/add-quiz").post(protect, admin, quizController.addQuiz);
+router.route("/admin/add-quiz").post(protect, admin, quizController.addQuiz);
 
 module.exports = router;
