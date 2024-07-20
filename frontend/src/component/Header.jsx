@@ -1,5 +1,5 @@
 // src/Navbar.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -7,16 +7,26 @@ const MyNavbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const checkLoginStatus = useCallback(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(token !== null);
   }, []);
 
+  useEffect(() => {
+    checkLoginStatus();
+
+    window.addEventListener("storage", checkLoginStatus);
+
+    return () => {
+      window.removeEventListener("storage", checkLoginStatus);
+    };
+  }, [checkLoginStatus]);
+
   const logoutHandle = () => {
     const userConfirmed = window.confirm("Are you sure you want to logout?");
     if (userConfirmed) {
-      localStorage.clear();
-      setIsLoggedIn(false); 
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
       navigate("/login");
     }
   };
@@ -28,9 +38,14 @@ const MyNavbar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="/">Home</Nav.Link>
+            {!isLoggedIn && (
+              <>
+                <Nav.Link href="/">Home</Nav.Link>
+              </>
+            )}
             {isLoggedIn && (
               <>
+                <Nav.Link href="/quiz">Quiz</Nav.Link>
                 <Nav.Link href="/profile">My Profile</Nav.Link>
                 <Nav.Link onClick={logoutHandle}>Logout</Nav.Link>
               </>

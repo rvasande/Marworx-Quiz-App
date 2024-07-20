@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Card, Container, Row, Col,Table } from "react-bootstrap";
+import { Card, Container, Row, Col, Table } from "react-bootstrap";
+import { convertISOToDate } from "../utils/utils";
 
 const ProfileScreen = () => {
   const name = localStorage.getItem("name");
@@ -37,8 +38,8 @@ const ProfileScreen = () => {
   }, [token, userId]);
 
   return (
-    <Container className="my-4" >
-      <Row >
+    <Container className="my-4">
+      <Row>
         <Col md={6}>
           <Card>
             <Card.Body>
@@ -57,6 +58,7 @@ const ProfileScreen = () => {
                   <thead>
                     <tr>
                       <th>Quiz Name</th>
+                      <th>Date</th>
                       <th>Score</th>
                     </tr>
                   </thead>
@@ -64,7 +66,8 @@ const ProfileScreen = () => {
                     {scoreDetails.map((detail) => (
                       <tr key={detail._id}>
                         <td>{detail.quizName}</td>
-                        <td>{detail.score}</td>
+                        <td>{convertISOToDate(detail.date)}</td>
+                        <td>{detail.score} Out off {detail.totalMarks}</td>
                       </tr>
                     ))}
                   </tbody>

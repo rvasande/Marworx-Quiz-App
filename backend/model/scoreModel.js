@@ -16,6 +16,10 @@ const scoreSchema = new Schema({
         type: Number,
         required: true
     },
+    totalMarks: {
+        type: Number,
+        required: true
+    },
     date: {
         type: Date,
         default: Date.now

@@ -80,10 +80,9 @@ exports.logoutUser = asyncHandler(async (req, res, next) => {
 // @route     POST /api/v1/user/score/
 // @access    Private
 exports.saveScore = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
-  const { score, quizName, userId } = req.body;
+  const { score, quizName, userId, totalMarks } = req.body;
 
-  const newScore = new Score({ userId, quizName, score });
+  const newScore = new Score({ userId, quizName, score, totalMarks });
   await newScore.save();
   res.status(201).json({
     status: "success",

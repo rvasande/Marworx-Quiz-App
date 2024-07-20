@@ -12,10 +12,11 @@ const QuizQuestionsScreen = () => {
   const [intervalId, setIntervalId] = useState(null);
   const [quizName, setQuizname] = useState(quizData.title);
 
-  // console.log('xxxxx',quizName);
   const [selectedOptions, setSelectedOptions] = useState({});
   const timerSec =
     quizData?.questions.reduce((acc, el) => acc + el.timer, 0) || 0;
+
+  const totalMarks = quizData?.questions?.length * 5;
 
   useEffect(() => {
     if (timerSec > 0) {
@@ -73,7 +74,7 @@ const QuizQuestionsScreen = () => {
       const temp = resultArr.filter((el) => el.isCorrect);
       const newScore = temp.length * 5;
       setScore(newScore);
-      saveScore(token, newScore, quizName);
+      saveScore(token, newScore, quizName, totalMarks);
       setSelectedOptions({});
 
       setTimeout(() => {
@@ -87,7 +88,7 @@ const QuizQuestionsScreen = () => {
 
   const isSubmitDisabled = Object.keys(selectedOptions).length === 0;
 
-  const saveScore = async (token, score, quizName) => {
+  const saveScore = async (token, score, quizName,totalMarks) => {
     const userId = localStorage.getItem("userId");
 
     const config = {
@@ -96,7 +97,7 @@ const QuizQuestionsScreen = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ score, quizName, userId }),
+      body: JSON.stringify({ score, quizName, userId, totalMarks }),
     };
 
     try {
@@ -105,7 +106,6 @@ const QuizQuestionsScreen = () => {
         config
       );
       const result = await response.json();
-      // console.log('resulttttttt', result);
       return result;
     } catch (error) {
       console.error("Error saving score:", error);
@@ -131,7 +131,7 @@ const QuizQuestionsScreen = () => {
         </Col>
 
         <Col xs={2} className="text-end">
-          <h4> Score: {score}</h4>
+          <h4> Score: {score} </h4>
         </Col>
         <Col xs={2} className="text-end">
           <Button
